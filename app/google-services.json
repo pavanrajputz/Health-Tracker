@@ -12,7 +12,20 @@
           "package_name": "in.ivinnovations.healthtracker"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "492921674422-6pkgmh277k3e9mivi4cp07l6v3fgsi9p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "in.ivinnovations.healthtracker",
+            "certificate_hash": "ba7ef5adac53ef33716d4db872565eabc132b20d"
+          }
+        },
+        {
+          "client_id": "492921674422-k393c5pbn33n05o3djrnlm0tc5eksb1r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCfZprNe3GlRip6GImy8875-ugFLgj8KMQ"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "492921674422-k393c5pbn33n05o3djrnlm0tc5eksb1r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
