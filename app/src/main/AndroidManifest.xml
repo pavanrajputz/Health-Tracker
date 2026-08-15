@@ -40,6 +40,11 @@
 
         <activity
             android:name=".activities.UserDetailsActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"/>
+
+        <activity
+            android:name=".activities.DashboardActivity"
             android:exported="false" />
     </application>
 

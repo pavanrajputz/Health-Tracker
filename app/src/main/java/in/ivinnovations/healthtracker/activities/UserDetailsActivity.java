@@ -1,12 +1,14 @@
 package in.ivinnovations.healthtracker.activities;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import android.view.WindowManager;
 import androidx.appcompat.app.AppCompatActivity;
 
 import in.ivinnovations.healthtracker.R;
@@ -47,6 +49,10 @@ public class UserDetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
+        );
 
         setContentView(R.layout.activity_user_details);
 
@@ -140,6 +146,8 @@ public class UserDetailsActivity extends AppCompatActivity {
     }
 
     private void validateDetails() {
+
+        hideKeyboard();
 
         clearErrors();
 
@@ -335,12 +343,12 @@ public class UserDetailsActivity extends AppCompatActivity {
         double weightKg = weight;
         double heightMeters;
 
-        if (weightUnit.equals("LBS")) {
+        if ("LBS".equals(weightUnit)) {
 
             weightKg = weight * 0.45359237;
         }
 
-        if (heightUnit.equals("CM")) {
+        if ("CM".equals(heightUnit)) {
 
             heightMeters = height / 100.0;
 
@@ -349,21 +357,22 @@ public class UserDetailsActivity extends AppCompatActivity {
             heightMeters = height * 0.0254;
         }
 
+        if (heightMeters <= 0) {
+            return;
+        }
+
         double bmi =
                 weightKg /
                         (heightMeters * heightMeters);
 
-        Toast.makeText(
-                this,
-                String.format(
-                        Locale.getDefault(),
-                        "BMI: %.2f",
-                        bmi
-                ),
-                Toast.LENGTH_LONG
-        ).show();
+        Intent intent = new Intent(
+                UserDetailsActivity.this,
+                DashboardActivity.class
+        );
 
-        // BMI screen will be created next.
+        startActivity(intent);
+
+        finish();
     }
 
     private String getText(TextInputEditText editText) {
@@ -382,5 +391,24 @@ public class UserDetailsActivity extends AppCompatActivity {
         tilDateOfBirth.setError(null);
         tilWeight.setError(null);
         tilHeight.setError(null);
+    }
+
+    private void hideKeyboard() {
+
+        android.view.View view = getCurrentFocus();
+
+        if (view != null) {
+
+            android.view.inputmethod.InputMethodManager imm =
+                    (android.view.inputmethod.InputMethodManager)
+                            getSystemService(INPUT_METHOD_SERVICE);
+
+            if (imm != null) {
+                imm.hideSoftInputFromWindow(
+                        view.getWindowToken(),
+                        0
+                );
+            }
+        }
     }
 }
