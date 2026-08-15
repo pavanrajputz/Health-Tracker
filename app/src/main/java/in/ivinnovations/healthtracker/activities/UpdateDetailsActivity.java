@@ -376,13 +376,10 @@ public class UpdateDetailsActivity extends AppCompatActivity {
                 .update(updates)
                 .addOnSuccessListener(unused -> {
 
-                    Toast.makeText(
-                            this,
-                            "Details updated successfully",
-                            Toast.LENGTH_SHORT
-                    ).show();
-
-                    openDashboard();
+                    saveWeightHistory(
+                            weight,
+                            weightUnit
+                    );
 
                 })
                 .addOnFailureListener(e -> {
@@ -396,6 +393,62 @@ public class UpdateDetailsActivity extends AppCompatActivity {
                                     + e.getMessage(),
                             Toast.LENGTH_LONG
                     ).show();
+                });
+    }
+
+    private void saveWeightHistory(
+            double weight,
+            String weightUnit
+    ) {
+
+        if (mAuth.getCurrentUser() == null) {
+            return;
+        }
+
+        double weightKg = weight;
+
+        if ("LBS".equals(weightUnit)) {
+            weightKg = weight * 0.45359237;
+        }
+
+        Map<String, Object> history =
+                new HashMap<>();
+
+        history.put("weight", weight);
+        history.put("weightKg", weightKg);
+        history.put("unit", weightUnit);
+        history.put(
+                "timestamp",
+                System.currentTimeMillis()
+        );
+
+        String uid =
+                mAuth.getCurrentUser().getUid();
+
+        db.collection("users")
+                .document(uid)
+                .collection("weightHistory")
+                .add(history)
+                .addOnSuccessListener(documentReference -> {
+
+                    Toast.makeText(
+                            this,
+                            "Details updated successfully",
+                            Toast.LENGTH_SHORT
+                    ).show();
+
+                    openDashboard();
+
+                })
+                .addOnFailureListener(e -> {
+
+                    Toast.makeText(
+                            this,
+                            "Details updated, but history could not be saved",
+                            Toast.LENGTH_LONG
+                    ).show();
+
+                    openDashboard();
                 });
     }
 

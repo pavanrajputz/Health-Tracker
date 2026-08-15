@@ -18,6 +18,8 @@ import java.util.Locale;
 
 public class DashboardActivity extends AppCompatActivity {
 
+    private MaterialButton btnWeightHistory;
+
     private TextView tvGreeting;
     private TextView tvBmiValue;
     private TextView tvBmiCategory;
@@ -51,6 +53,9 @@ public class DashboardActivity extends AppCompatActivity {
         tvWeight = findViewById(R.id.tvWeight);
         tvHeight = findViewById(R.id.tvHeight);
 
+        btnWeightHistory =
+                findViewById(R.id.btnWeightHistory);
+
         btnUpdateDetails = findViewById(R.id.btnUpdateDetails);
     }
 
@@ -61,6 +66,16 @@ public class DashboardActivity extends AppCompatActivity {
             Intent intent = new Intent(
                     DashboardActivity.this,
                     UpdateDetailsActivity.class
+            );
+
+            startActivity(intent);
+        });
+
+        btnWeightHistory.setOnClickListener(v -> {
+
+            Intent intent = new Intent(
+                    DashboardActivity.this,
+                    WeightHistoryActivity.class
             );
 
             startActivity(intent);

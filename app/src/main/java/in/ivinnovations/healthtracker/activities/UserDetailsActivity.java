@@ -305,13 +305,7 @@ public class UserDetailsActivity extends AppCompatActivity {
                 .update(details)
                 .addOnSuccessListener(unused -> {
 
-                    Toast.makeText(
-                            this,
-                            "Details saved successfully",
-                            Toast.LENGTH_SHORT
-                    ).show();
-
-                    calculateAndOpenBMI(
+                    saveWeightHistory(
                             weight,
                             height,
                             weightUnit,
@@ -330,6 +324,68 @@ public class UserDetailsActivity extends AppCompatActivity {
                                     + e.getMessage(),
                             Toast.LENGTH_LONG
                     ).show();
+                });
+    }
+
+    private void saveWeightHistory(
+            double weight,
+            double height,
+            String weightUnit,
+            String heightUnit
+    ) {
+
+        if (mAuth.getCurrentUser() == null) {
+            return;
+        }
+
+        double weightKg = weight;
+
+        if ("LBS".equals(weightUnit)) {
+            weightKg = weight * 0.45359237;
+        }
+
+        Map<String, Object> history = new HashMap<>();
+
+        history.put("weight", weight);
+        history.put("weightKg", weightKg);
+        history.put("unit", weightUnit);
+        history.put(
+                "timestamp",
+                System.currentTimeMillis()
+        );
+
+        String uid = mAuth.getCurrentUser().getUid();
+
+        db.collection("users")
+                .document(uid)
+                .collection("weightHistory")
+                .add(history)
+                .addOnSuccessListener(documentReference -> {
+
+                    calculateAndOpenBMI(
+                            weight,
+                            height,
+                            weightUnit,
+                            heightUnit
+                    );
+
+                })
+                .addOnFailureListener(e -> {
+
+                    Toast.makeText(
+                            this,
+                            "Could not save weight history",
+                            Toast.LENGTH_SHORT
+                    ).show();
+
+                    // Even if history fails, the main
+                    // user details were already saved.
+                    calculateAndOpenBMI(
+                            weight,
+                            height,
+                            weightUnit,
+                            heightUnit
+                    );
                 });
     }
 
