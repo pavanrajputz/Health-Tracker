@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "492921674422",
+    "project_id": "healthtracker-dc3d4",
+    "storage_bucket": "healthtracker-dc3d4.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:492921674422:android:a74df7f4e40a9bde182417",
+        "android_client_info": {
+          "package_name": "in.ivinnovations.healthtracker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfZprNe3GlRip6GImy8875-ugFLgj8KMQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
