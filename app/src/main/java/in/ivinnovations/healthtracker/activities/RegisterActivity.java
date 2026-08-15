@@ -1,11 +1,18 @@
 package in.ivinnovations.healthtracker.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,7 +21,16 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class RegisterActivity extends AppCompatActivity {
+
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
+
 
     private TextInputEditText etName;
     private TextInputEditText etEmail;
@@ -36,6 +52,8 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_register);
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
         initializeViews();
         setupListeners();
@@ -158,12 +176,95 @@ public class RegisterActivity extends AppCompatActivity {
             String password
     ) {
 
-        // Firebase registration will be added next.
+        btnCreateAccount.setEnabled(false);
+        btnCreateAccount.setText("Creating Account...");
 
-        Toast.makeText(
-                this,
-                "Validation successful",
-                Toast.LENGTH_SHORT
-        ).show();
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, task -> {
+
+                    if (task.isSuccessful()) {
+
+                        FirebaseUser user = mAuth.getCurrentUser();
+
+                        if (user != null) {
+
+                            saveUserProfile(
+                                    user.getUid(),
+                                    name,
+                                    email
+                            );
+                        }
+
+                    } else {
+
+                        btnCreateAccount.setEnabled(true);
+                        btnCreateAccount.setText("Create Account");
+
+                        String errorMessage = "Registration failed";
+
+                        if (task.getException() != null) {
+                            errorMessage = task.getException().getMessage();
+                        }
+
+                        Toast.makeText(
+                                RegisterActivity.this,
+                                errorMessage,
+                                Toast.LENGTH_LONG
+                        ).show();
+                    }
+                });
+    }
+
+    private void saveUserProfile(
+            String uid,
+            String name,
+            String email
+    ) {
+
+        Map<String, Object> userData = new HashMap<>();
+
+        userData.put("name", name);
+        userData.put("email", email);
+        userData.put("createdAt",
+                System.currentTimeMillis());
+
+        db.collection("users")
+                .document(uid)
+                .set(userData)
+                .addOnSuccessListener(unused -> {
+
+                    Toast.makeText(
+                            RegisterActivity.this,
+                            "Account created successfully",
+                            Toast.LENGTH_SHORT
+                    ).show();
+
+                    openUserDetails();
+
+                })
+                .addOnFailureListener(e -> {
+
+                    btnCreateAccount.setEnabled(true);
+                    btnCreateAccount.setText("Create Account");
+
+                    Toast.makeText(
+                            RegisterActivity.this,
+                            "Could not save user profile: "
+                                    + e.getMessage(),
+                            Toast.LENGTH_LONG
+                    ).show();
+                });
+    }
+
+    private void openUserDetails() {
+
+        Intent intent = new Intent(
+                RegisterActivity.this,
+                UserDetailsActivity.class
+        );
+
+        startActivity(intent);
+
+        finish();
     }
 }

@@ -2,6 +2,7 @@ package in.ivinnovations.healthtracker.activities;
 
 import android.os.Bundle;
 import android.widget.TextView;
+import android.content.Intent;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -65,8 +66,12 @@ public class LoginActivity extends AppCompatActivity {
 
         tvCreateAccount.setOnClickListener(v -> {
 
-            // Signup screen will be implemented next.
+            Intent intent = new Intent(
+                    LoginActivity.this,
+                    RegisterActivity.class
+            );
 
+            startActivity(intent);
         });
     }
 }
