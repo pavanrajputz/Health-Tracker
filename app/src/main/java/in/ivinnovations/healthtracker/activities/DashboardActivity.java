@@ -1,5 +1,6 @@
 package in.ivinnovations.healthtracker.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,13 +58,12 @@ public class DashboardActivity extends AppCompatActivity {
 
         btnUpdateDetails.setOnClickListener(v -> {
 
-            // Update screen will be connected later.
+            Intent intent = new Intent(
+                    DashboardActivity.this,
+                    UpdateDetailsActivity.class
+            );
 
-            Toast.makeText(
-                    this,
-                    "Update feature coming next",
-                    Toast.LENGTH_SHORT
-            ).show();
+            startActivity(intent);
         });
     }
 

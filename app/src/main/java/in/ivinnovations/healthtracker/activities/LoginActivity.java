@@ -304,8 +304,12 @@ public class LoginActivity extends AppCompatActivity {
 
         tvForgotPassword.setOnClickListener(v -> {
 
-            // Password reset screen will be implemented next.
+            Intent intent = new Intent(
+                    LoginActivity.this,
+                    ForgotPasswordActivity.class
+            );
 
+            startActivity(intent);
         });
 
         tvCreateAccount.setOnClickListener(v -> {
