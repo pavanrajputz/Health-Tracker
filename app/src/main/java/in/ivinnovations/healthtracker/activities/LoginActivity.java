@@ -1,6 +1,7 @@
 package in.ivinnovations.healthtracker.activities;
 
 import android.os.Bundle;
+import android.util.Patterns;
 import android.widget.TextView;
 import android.content.Intent;
 
@@ -22,6 +23,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -29,6 +31,9 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class LoginActivity extends AppCompatActivity {
+
+    private TextInputLayout tilEmail;
+    private TextInputLayout tilPassword;
 
     private TextInputEditText etEmail;
     private TextInputEditText etPassword;
@@ -69,6 +74,9 @@ public class LoginActivity extends AppCompatActivity {
 
         btnLogin = findViewById(R.id.btnLogin);
         btnGoogle = findViewById(R.id.btnGoogle);
+
+        tilEmail = findViewById(R.id.tilEmail);
+        tilPassword = findViewById(R.id.tilPassword);
 
         tvForgotPassword = findViewById(R.id.tvForgotPassword);
         tvCreateAccount = findViewById(R.id.tvCreateAccount);
@@ -156,6 +164,24 @@ public class LoginActivity extends AppCompatActivity {
                         idToken,
                         null
                 );
+
+        String email = getText(etEmail);
+        String password = getText(etPassword);
+
+        if (email.isEmpty()) {
+            tilEmail.setError("Please enter your email");
+            return;
+        }
+
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            tilEmail.setError("Please enter a valid email");
+            return;
+        }
+
+        if (password.isEmpty()) {
+            tilPassword.setError("Please enter your password");
+            return;
+        }
 
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, task -> {

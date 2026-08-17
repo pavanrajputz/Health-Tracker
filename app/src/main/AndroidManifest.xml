@@ -57,6 +57,10 @@
         <activity
             android:name=".activities.WeightHistoryActivity"
             android:exported="false" />
+
+        <activity
+            android:name=".activities.SettingsActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

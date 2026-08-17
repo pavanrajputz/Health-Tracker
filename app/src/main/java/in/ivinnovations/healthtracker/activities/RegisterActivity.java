@@ -86,7 +86,9 @@ public class RegisterActivity extends AppCompatActivity {
         btnCreateAccount.setOnClickListener(v -> validateRegistration());
     }
 
-    private void validateRegistration() {
+
+
+    private boolean validateRegistration() {
 
         clearErrors();
 
@@ -95,62 +97,46 @@ public class RegisterActivity extends AppCompatActivity {
         String password = getText(etPassword);
         String confirmPassword = getText(etConfirmPassword);
 
-        boolean isValid = true;
-
-        // Name validation
-        if (TextUtils.isEmpty(name)) {
-
-            tilName.setError("Please enter your name");
-            isValid = false;
-
+        if (name.isEmpty()) {
+            tilName.setError("Please enter your full name");
+            return false;
         }
 
-        // Email validation
-        if (TextUtils.isEmpty(email)) {
+        if (name.length() < 2) {
+            tilName.setError("Name must contain at least 2 characters");
+            return false;
+        }
 
+        if (email.isEmpty()) {
             tilEmail.setError("Please enter your email");
+            return false;
+        }
 
-            isValid = false;
-
-        } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             tilEmail.setError("Please enter a valid email");
-
-            isValid = false;
+            return false;
         }
 
-        // Password validation
-        if (TextUtils.isEmpty(password)) {
-
+        if (password.isEmpty()) {
             tilPassword.setError("Please enter a password");
-
-            isValid = false;
-
-        } else if (password.length() < 6) {
-
-            tilPassword.setError("Password must be at least 6 characters");
-
-            isValid = false;
+            return false;
         }
 
-        // Confirm password validation
-        if (TextUtils.isEmpty(confirmPassword)) {
-
-            tilConfirmPassword.setError("Please confirm your password");
-
-            isValid = false;
-
-        } else if (!password.equals(confirmPassword)) {
-
-            tilConfirmPassword.setError("Passwords do not match");
-
-            isValid = false;
+        if (password.length() < 6) {
+            tilPassword.setError(
+                    "Password must contain at least 6 characters"
+            );
+            return false;
         }
 
-        if (isValid) {
-
-            createAccount(name, email, password);
+        if (!password.equals(confirmPassword)) {
+            tilConfirmPassword.setError(
+                    "Passwords do not match"
+            );
+            return false;
         }
+
+        return true;
     }
 
     private void clearErrors() {

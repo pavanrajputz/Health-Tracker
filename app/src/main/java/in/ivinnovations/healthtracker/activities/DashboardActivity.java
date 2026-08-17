@@ -2,6 +2,7 @@ package in.ivinnovations.healthtracker.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +32,8 @@ public class DashboardActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
 
+    private ImageView ivProfile;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +55,7 @@ public class DashboardActivity extends AppCompatActivity {
         tvBmiCategory = findViewById(R.id.tvBmiCategory);
         tvWeight = findViewById(R.id.tvWeight);
         tvHeight = findViewById(R.id.tvHeight);
+        ivProfile = findViewById(R.id.ivProfile);
 
         btnWeightHistory =
                 findViewById(R.id.btnWeightHistory);
@@ -77,6 +81,17 @@ public class DashboardActivity extends AppCompatActivity {
                     DashboardActivity.this,
                     WeightHistoryActivity.class
             );
+
+            startActivity(intent);
+        });
+
+        ivProfile.setOnClickListener(v -> {
+
+            Intent intent =
+                    new Intent(
+                            DashboardActivity.this,
+                            SettingsActivity.class
+                    );
 
             startActivity(intent);
         });
